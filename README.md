@@ -7,7 +7,7 @@
 
 ## use
 ``` bash
-    node spider.js
+    node main.js
 ```
 
 ## todo
