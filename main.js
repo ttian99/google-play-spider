@@ -1,42 +1,124 @@
 const CNT = require('./lib/CNT');
 const getList = require('./lib/get-list');
-const getDetail = require('./lib/get-detail');
+const detailSpider = require('./lib/get-detail');
+const moment = require('moment');
+const fs = require('fs-extra');
+const csv = require('fast-csv');
+const path = require('path');
+const utils = require('./lib/utils');
 
-// const EventEmitter = require('events').EventEmitter;
-// const eventMgr = new EventEmitter();
-
-const BASE_URL = 'https://play.google.com/store/apps';
-
-// 创建任务
-function makeTask() {
-    let task = [];
-    for (const key in CNT.COLLECTION) {
-        const url = `${BASE_URL}/category/GAME/collection/${key}`;
-        task.push(url);
-    }
-    return task;
+// 获取游戏榜单链接
+function getUrl(collection) {
+    const BASE_URL = 'https://play.google.com/store/apps';
+    return `${BASE_URL}/category/GAME/collection/${collection}`;
 }
 
-async function getDetailTask(arr) {
+// 获取游戏名称
+function getFileName(collection) {
+    const name = CNT.COLLECTION[collection];
+    return `googleplay.${name}.${moment().format('YYYY.MM.DD')}`;
+}
+
+
+async function getDetailTask(arr, collection) {
+    console.log('getDetail start ' + collection);
+    const fileName = path.join(__dirname, 'temp', getFileName(collection) + '.csv');
+    const fileNameNew = path.join(__dirname, 'db', getFileName(collection) + '.csv');
+
+    // 创建可写流
+    const writeStream = fs.createWriteStream(fileName);
+    const csvStream = csv.createWriteStream({ headers: true });
+    writeStream.on('finish', async function () {
+        console.log('writeStream finish');
+        await utils.utf8ToGbk(fileName, fileNameNew);
+        console.log('DONE!');
+    });
+    csvStream.pipe(writeStream);
+
     for (let j = 0; j < arr.length; j++) {
         const item = arr[j];
+        console.log(`rank = ${item.rank}, id = ${item.id}`);
         const url = item.detailUrl;
-        const data = await getDetail(url);
+        let flag = '';
+        if (j == 0) { flag = 'start' };
+        if (j == arr.length - 1) { flag = 'end' };
+        try {
+            const data = await detailSpider.getDetail(url, flag);
+            // console.log('data = ' + JSON.stringify(data));
+            const newData = {
+                '排名': item.rank,
+                '游戏名称': data.name,
+                '公司名称': data.devName,
+                '分类': data.type,
+                '评分': data.score,
+                '评分人数': data.scorePeople,
+                '安装次数+': data.install,
+                '更新日期': data.update,
+                '大小M': data.size,
+                '当前版本': data.version,
+                '包名': item.id,
+                '网站': data.website,
+                '联系方式': data.email
+            }
+            // 写入数据到表格
+            csvStream.write(newData);
+        } catch (error) {
+            const newData = {
+                '排名': item.rank,
+                '游戏名称': '无',
+                '公司名称': '无',
+                '分类': '无',
+                '评分': '无',
+                '评分人数': '无',
+                '安装次数+': '无',
+                '更新日期': '无',
+                '大小M': '无',
+                '当前版本': '无',
+                '包名': item.id,
+                '网站': '无',
+                '联系方式': '无'
+            }
+            // console.log(newData);
+            csvStream.write(newData);
+        }
     }
+    // 数据写入完成
+    csvStream.end();
+    console.log('getDetail end ' + collection);
+    return;
 }
 
 // 主程序
-async function main() {
-    var task = makeTask();
-    for (let i = 0; i < task.length; i++) {
-        const url = task[i];
+async function main(startId = 0) {
+    const arr = Object.keys(CNT.COLLECTION);
+    for (let i = 0; i < arr.length; i++) {
+        const collection = arr[i];
+        const url = getUrl(collection);
+        if (i <= startId) continue;
         console.log(`task start: ${url}`);
-        const arr = await getList(url);
+        const list = await getList(url);
         console.log(`task over: ${url}`);
+        await getDetailTask(list, collection);
     }
 }
 
-// main();
+// 单独获取
+async function getSingleDetail(url) {
+    try {
+        const data = await detailSpider.getDetail(url, 'start');    
+        console.log(data);   
+    } catch (error) {
+        console.log(error);
+        // console.log(data);  
+    }
+}
 
-var url = 'https://play.google.com/store/apps/details?id=com.parking.game'
-getDetail(url);
+async function getSingleDetailTask() {
+    const arr = fs.readJsonSync(path.join('temp', 'topselling_new_free.json'));
+    await getDetailTask(arr, 'topselling_new_free');
+}
+// var url1 = 'https://play.google.com/store/apps/details?id=com.vnlentertainment.coc';
+// getSingleDetail(url1);
+
+main(2);
+// getSingleDetailTask();
