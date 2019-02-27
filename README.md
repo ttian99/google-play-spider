@@ -21,3 +21,5 @@
 - 热门免费-游戏	https://play.google.com/store/apps/category/GAME/collection/topselling_free
 - 热门付费-游戏	https://play.google.com/store/apps/category/GAME/collection/topselling_paid
 - 创收最高-游戏	https://play.google.com/store/apps/category/GAME/collection/topgrossing
+
+## [linux依赖库](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md)
