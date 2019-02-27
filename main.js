@@ -120,5 +120,5 @@ async function getSingleDetailTask() {
 // var url1 = 'https://play.google.com/store/apps/details?id=com.vnlentertainment.coc';
 // getSingleDetail(url1);
 
-main(2);
+main(0);
 // getSingleDetailTask();
