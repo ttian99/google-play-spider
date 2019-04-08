@@ -22,4 +22,5 @@
 - 热门付费-游戏	https://play.google.com/store/apps/category/GAME/collection/topselling_paid
 - 创收最高-游戏	https://play.google.com/store/apps/category/GAME/collection/topgrossing
 
+- 搜索关键字爬取：https://play.google.com/store/search?q=鲨鱼&c=apps&authuser
 ## [linux依赖库](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md)
