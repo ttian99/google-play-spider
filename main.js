@@ -89,17 +89,21 @@ async function getDetailTask(arr, collection) {
 }
 
 // 主程序
-async function main(startId = 0) {
+async function main(startId = 0, endId = 9) {
     const arr = Object.keys(CNT.COLLECTION);
     for (let i = 0; i < arr.length; i++) {
+        if (i < startId || i > endId) continue;
         const collection = arr[i];
-        const url = getUrl(collection);
-        if (i <= startId) continue;
-        console.log(`task start: ${url}`);
-        const list = await getList(url);
-        console.log(`task over: ${url}`);
-        await getDetailTask(list, collection);
+        await getSingleCollection(collection);
     }
+}
+
+async function getSingleCollection(collection) {
+    const url = getUrl(collection);
+    console.log(`task start: ${url}`);
+    const list = await getList(url);
+    console.log(`task over: ${url}`);
+    await getDetailTask(list, collection);
 }
 
 // 单独获取
@@ -120,5 +124,5 @@ async function getSingleDetailTask() {
 // var url1 = 'https://play.google.com/store/apps/details?id=com.vnlentertainment.coc';
 // getSingleDetail(url1);
 
-main(0);
+main(0, 0);
 // getSingleDetailTask();

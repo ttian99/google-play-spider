@@ -24,6 +24,7 @@
     "eslint-config-google": "^0.10.0"
   },
   "scripts": {
+    "start": "pm2 start lib/svr.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
