@@ -112,7 +112,8 @@ async function getSingleDetail(url) {
         const data = await detailSpider.getDetail(url, 'start');    
         console.log(data);   
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        console.log('error')
         // console.log(data);  
     }
 }
@@ -122,7 +123,9 @@ async function getSingleDetailTask() {
     await getDetailTask(arr, 'topselling_new_free');
 }
 // var url1 = 'https://play.google.com/store/apps/details?id=com.vnlentertainment.coc';
-// getSingleDetail(url1);
+// var url1 = 'https://play.google.com/store/apps/details?id=com.zeptolab.cats.google';
+var url1 = 'https://play.google.com/store/apps/details?id=com.hgames.propvshunter';
+getSingleDetail(url1);
 
-main(0, 0);
+// main(0, 0);
 // getSingleDetailTask();
