@@ -24,3 +24,23 @@
 
 - 搜索关键字爬取：https://play.google.com/store/search?q=鲨鱼&c=apps&authuser
 ## [linux依赖库](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md)
+
+
+## 注意问题
+
+- 中文和英文切换：在URL后面加上下列参数
+&hl=en-US
+&hl=zh-CN
+- 未登录账号为英文:
+0:"Updated"
+1:"Size"
+2:"Installs"
+3:"Current Version"
+4:"Requires Android"
+5:"Content Rating"
+6:"Interactive Elements"
+7:"In-app Products"
+8:"Permissions"
+9:"Report"
+10:"Offered By"
+11:"Developer"
