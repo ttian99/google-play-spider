@@ -7,6 +7,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "svr",
+            "program": "${workspaceFolder}\\lib\\svr.js"
+        },        
+        {
+            "type": "node",
+            "request": "launch",
             "name": "main",
             "program": "${workspaceFolder}\\main.js"
         }
